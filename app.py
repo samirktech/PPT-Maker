@@ -103,7 +103,7 @@ if all(ALL_API):
         tools = [search_latest_info,
                  #generate_image
                  ])
-    leader_agent
+    #leader_agent
 else:
     st.info("Give API-Keys First to load Agent")
 
@@ -155,22 +155,3 @@ if (user_input):
                         st.success("PPT Downloaded Successfully!!")
                 except Exception as err:
                     st.error("Error Code: ", err)
-
-                    
-                    
-        
-
-# Creating ppt
-user = """Create ppt for Presenter Samir Khan,
-Topic: Top 5 wizards in Harry potter series,
-Slides: 5 slides"""
-code= run_agent(leader_agent, user)
-ip.display.HTML(code)
-
-# file saving
-with open("ppt.html","w") as f:
-  f.write(code)
-
-# Only for colab user to download file
-from google.colab import files
-files.download("ppt.html")
