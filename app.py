@@ -94,6 +94,58 @@ def run_agent(leader_agent, query):
   return code
 
 
+# leader_agent creation
+if all(ALL_API):
+    leader_agent = create_agent(
+        model = model,
+        tools = [search_latest_info,
+                 #generate_image
+                 ])
+    leader_agent
+else:
+    st.info("Give API-Keys First to load Agent")
+
+#=====================Step 4 STREAMLIT NAVBARS ===============================#
+tab1,tab2,tab3 = st.tabs(["Generate Image",
+                          "Fetch News",
+                          "Generate PPT"])
+
+user_input = st.text_area("Write Prompt & click Enter")
+
+if (user_input) & (leader_agent):
+    with tab1:
+        if st.button("Click to Generate Image", key = "Image-Button"):
+            with st.spinner("Running Agent"):
+                try:
+                    url = generate_image(user_input)
+                    import requests as r
+                    img_data = r.get(url)
+                    st.image(url)
+                except Exception as err:
+                    st.error("Error Code: ",err)
+
+    with tab2:
+        if st.button("Fetch Latest News", key = "News-Button"):
+            with st.spinner("Running Agent"):
+                try:
+                    prompt = """Give Latest News Related to Given user Query
+                    in Dynamic HTML.Output  with cards Design Format.
+                    Strict HTML Output,No Any markdowns response
+                    User Query: """ + user_input
+
+
+                    response = leader_agent.invoke({'messages':[{'role':'user',
+                                              'content':prompt}]})
+                    
+                    code = response['messages'][-1].content[-1]['text']
+                    st.html(code,width = "stretch", unsafe_allow_javascript=True
+                except Exception as err:
+                    st.error("Error Code:", err)
+
+                    
+                    
+        
+
 # Creating ppt
 user = """Create ppt for Presenter Samir Khan,
 Topic: Top 5 wizards in Harry potter series,
