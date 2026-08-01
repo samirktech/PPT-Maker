@@ -10,17 +10,39 @@ import os
 import time
 import numpy as np
 
+#===============STEP 2 LOAD ENV AND API-KEYS==============
+st.title("Agentic PPT Generator")
+st.header("""User can generate,ppt,Images, and fetch Latest news""")
 
+st.sidebar.title("Give API KEYS")
 
-#====Model=========#
-model = ChatGoogleGenerativeAI(
-    model = 'gemini-3.5-flash-lite',
-    google_api_key = GOOGLE_API_KEY
-)
+GOOGLE_API_KEY = st.sidebar.text_input("GOOGLE_API_KEY",type="password")
+TAVILY_API_KEY = st.sidebar.text_input("TAVILY_API_KEY",type="password")
 
-response = model.invoke("Hello Buddy!")
-response.content[-1]["text"]
+ALL_API = [GOOGLE_API_KEY,TAVILY_API_KEY]
 
+if not all(ALL_API):
+    st.sidebar.error("Must Pass All API-KEYS")
+    
+    url = "https://aistudio.google.com/api-keys"
+    st.markdown(f"Get Google API Key-{url}")
+    
+    url = "https://app.tavily.com/playground"
+    st.markdown(f"Get Travily API Key-{url}")
+
+elif all(ALL_API):
+    st.success("API KEYS LOADED")
+    options = ["gemini-3.5-flash-lite","gemini-3.5-flash",
+               "gemini-2.5-flash-lite","gemini-2.5-flash"]
+
+    selected_model = st.selectbox("Select-Model",options = options)
+    
+    model = ChatGoogleGenerativeAI(
+        model = 'gemini-3.5-flash-lite',
+        google_api_key = GOOGLE_API_KEY
+    )
+else:
+    st.sidebar.info("Try Valid API-keys")
 
 # Search_latest_info using tavily
 def search_latest_info(query):
