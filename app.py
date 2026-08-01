@@ -44,6 +44,7 @@ elif all(ALL_API):
 else:
     st.sidebar.info("Try Valid API-keys")
 
+#=========================Step 3 backend============================#
 # Search_latest_info using tavily
 def search_latest_info(query):
   """This function helps to give
@@ -53,10 +54,6 @@ def search_latest_info(query):
   client = TavilyClient(api_key = TAVILY_API_KEY)
   response = client.search(query)
   return response
-
-
-# Calling function
-search_latest_info("String Theory in Quantum Mechanics")
 
 
 # Tool 2
@@ -71,24 +68,7 @@ def generate_image(img_prompt,slide_no = 1):
   content = r.get(url).content
   with open(f"ai_image_{slide_no}.jpeg",'wb') as f:
     f.write(content)
-
-  from PIL import Image
-  img = Image.open(f"ai_image_{slide_no}.jpeg")
-  return img
-
-
-# Calling function
-generate_image("sitting at bornfire with alaskan northen lights in night from person pov")
-
-
-# leader_agent creation
-leader_agent = create_agent(
-    model = model,
-    tools = [search_latest_info,
-             #generate_image
-             ])
-leader_agent
-
+  return url
 
 # Running Agent
 def run_agent(leader_agent, query):
